@@ -1,2 +1,2 @@
-# {{NAME}}-brunch 1.5.0 (1 January 2013)
+# {{NAME}}-brunch 1.0.0 (Jan 1, 2016)
 * Initial release
