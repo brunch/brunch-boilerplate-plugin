@@ -7,16 +7,15 @@ Install the plugin via npm with `npm install --save {{NAME}}-brunch`.
 
 Or, do manual install:
 
-* Add `"{{NAME}}-brunch": "x.y.z"` to `package.json` of your brunch app.
-  Pick a plugin version that corresponds to your minor (y) brunch version.
-* If you want to use git version of plugin, add
-`"{{NAME}}-brunch": "git+ssh://git@github.com:brunch/{{NAME}}-brunch.git"`.
+* Add `"{{NAME}}-brunch": "~x.y.z"` to `package.json` of your brunch app.
+* If you want to use git version of plugin, use the GitHub URI
+`"{{NAME}}-brunch": "brunch/{{NAME}}-brunch"`.
 
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2012-2013 Paul Miller (http://paulmillr.com)
+Copyright (c) 2016 Paul Miller (http://paulmillr.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
