@@ -4,9 +4,7 @@ Adds ftp transfers support to
 
 ## Usage
 
-<div class="alert warning">
-    This plugin is in development and it is not ready to use!
-</div>
+**This plugin is in development and it is not ready to use!**
 
 Install the plugin via npm with `npm install --save ftpcopy-brunch`.
 
