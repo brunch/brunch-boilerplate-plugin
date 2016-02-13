@@ -3,6 +3,11 @@ Adds ftp transfers support to
 [brunch](http://brunch.io).
 
 ## Usage
+
+<div class="alert warning">
+    This plugin is in development and it is not ready to use!
+</div>
+
 Install the plugin via npm with `npm install --save ftpcopy-brunch`.
 
 Or, do manual install:
