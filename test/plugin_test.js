@@ -33,67 +33,55 @@ describe('It is a brunch plugin', function() {
 
 });
 
-describe('Using ftp-client', function() {
-  var plugin;
-  var ftpClientStub;
+describe('OnCompile', function() {
   var files = ['file1', 'file2'];
   var brunchFiles = files.map(name => ({ path: name }) );
+
+  var server = require('ftp-server');
+  const FTP_PORT = 60021;
 
   var config = {
       plugins: {
           ftpcopy : {
-              server: { host: 'localhost' }
+              server: {
+                  host: 'localhost',
+                  port: FTP_PORT,
+                  user: 'ftpcopyuser'
+              }
           }
       }
   };
 
-  before(function () {
-      mockery.enable({
-        warnOnReplace: false,
-        warnOnUnregistered: false,
-        useCleanCache: true
-      });
+  before(function (done) {
+      console.log('***', server);
+      server.listen(FTP_PORT, done);
 
-      ftpClientStub = sinon.stub();
-
-      mockery.registerMock('ftp-client', ftpClientStub );
-
-      Plugin = require('..');
   });
 
-  after(function() {
-      mockery.disable();
+  after(function () {
+      server.close();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
       plugin = new Plugin(config);
   });
 
-  it('should create a ftp-client instance', function() {
-      expect(ftpClientStub.called).to.be.true;
-  });
-
-  it('should initialize ftp-client using server configuration', function() {
-      expect(ftpClientStub.calledWith(config.plugins.ftpcopy.server)).to.be.true;
-  });
-
-  it('should connect when onCompile is called', function () {
-
+  it('should connect to the server', function(done) {
+      var callback = function() {
+          server.removeListener('connection', callback);
+          done();
+      }
+      server.on('connection', callback);
       plugin.onCompile(brunchFiles);
-
-      expect(ftpClientStub.connect.called).to.be.true;
   });
 
-  it('should upload files received as arguments when onCompile is called', function () {
-
-      ftpClientStub.connect = function (callback) {
-          callback();
-      };
-      ftpClientStub.upload = sinon.stub();
-
-      plugin.onCompile(brunchFiles);
-
-      expect(ftpClientStub.upload.calledWith(files)).to.be.true;
+  it('should authenticate with the user provided', function (done) {
+    var oldUSER = server.commands.USER;
+    server.commands.USER = function (username) {
+        expect(username).to.be.equal(config.plugins.ftpcopy.server.user);
+        server.commands.USER = oldUSER;
+        done();
+    }
 
   });
 
