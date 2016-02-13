@@ -1,5 +1,7 @@
 'use strict';
 
+var ftpClient = require('ftp-client');
+
 // Documentation for Brunch plugins:
 // https://github.com/brunch/brunch/blob/master/docs/plugins.md
 
@@ -8,6 +10,7 @@ class BrunchPlugin {
   constructor(config) {
     // Replace 'plugin' with your plugin's name;
     this.config = config && config.plugins && config.plugins.ftpcopy;
+    this.ftpClient = new ftpClient(this.config.server);
   }
 
   // file: File => Promise[Boolean]
@@ -33,7 +36,10 @@ class BrunchPlugin {
   // files: [File] => null
   // Executed when each compilation is finished.
   // Examples: Hot-reload (send a websocket push).
-  // onCompile(files) {}
+  onCompile(files) {
+      ftpClient.connect();
+
+  }
 
   // Allows to stop web-servers & other long-running entities.
   // Executed before Brunch process is closed.

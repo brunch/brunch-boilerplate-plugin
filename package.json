@@ -13,10 +13,13 @@
     "test": "node_modules/.bin/mocha --require test/common.js"
   },
   "dependencies": {
+    "ftp-client": "^0.2.2"
   },
   "devDependencies": {
     "chai": "~3.4.1",
     "eslint": "^1.10.3",
-    "mocha": "~2.3.4"
+    "mocha": "~2.3.4",
+    "mockery": "^1.4.0",
+    "sinon": "^1.17.3"
   }
 }
