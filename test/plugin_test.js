@@ -19,19 +19,25 @@ describe('It is a brunch plugin', function() {
     expect(plugin.brunchPlugin).to.be.true;
   });
 
+  it('should declare itself as an usual plugin', function() {
+    expect(plugin.defaultEnv).to.be.equal('*');
+  });
+
   it('should implement an onCompile function', function() {
     expect(plugin.onCompile).to.be.a('function');
   });
 
-  it('should read the configuration from "ftpcopy" plugin section', function () {
+  it('should read the configuration from ftpcopy\'s plugin section', function () {
     expect(plugin.config).to.be.equal(config.plugins.ftpcopy);
   });
 
 });
 
-describe('It uses ftp-client', function() {
+describe('Using ftp-client', function() {
   var plugin;
   var ftpClientStub;
+  var files = ['file1', 'file2'];
+  var brunchFiles = files.map(name => ({ path: name }) );
 
   var config = {
       plugins: {
@@ -50,7 +56,7 @@ describe('It uses ftp-client', function() {
 
       ftpClientStub = sinon.stub();
 
-      mockery.registerMock('ftp-client', ftpClientStub);
+      mockery.registerMock('ftp-client', ftpClientStub );
 
       Plugin = require('..');
   });
@@ -72,11 +78,23 @@ describe('It uses ftp-client', function() {
   });
 
   it('should connect when onCompile is called', function () {
-      ftpClientStub.connect = sinon.stub();
 
-      plugin.onCompile();
+      plugin.onCompile(brunchFiles);
 
       expect(ftpClientStub.connect.called).to.be.true;
+  });
+
+  it('should upload files received as arguments when onCompile is called', function () {
+
+      ftpClientStub.connect = function (callback) {
+          callback();
+      };
+      ftpClientStub.upload = sinon.stub();
+
+      plugin.onCompile(brunchFiles);
+
+      expect(ftpClientStub.upload.calledWith(files)).to.be.true;
+
   });
 
 });

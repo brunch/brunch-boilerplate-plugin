@@ -37,8 +37,13 @@ class BrunchPlugin {
   // Executed when each compilation is finished.
   // Examples: Hot-reload (send a websocket push).
   onCompile(files) {
-      ftpClient.connect();
+    var filesPaths = files.map(f => f.path);
 
+    var ftp = this.ftpClient;
+
+    ftp.connect(function() {
+        ftp.upload(filesPaths);
+    });
   }
 
   // Allows to stop web-servers & other long-running entities.
@@ -61,6 +66,6 @@ BrunchPlugin.prototype.brunchPlugin = true;
 // Indicates which environment a plugin should be applied to.
 // The default value is '*' for usual plugins and
 // 'production' for optimizers.
-// BrunchPlugin.prototype.defaultEnv = 'production';
+BrunchPlugin.prototype.defaultEnv = '*';
 
 module.exports = BrunchPlugin;
