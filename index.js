@@ -7,7 +7,7 @@
 class BrunchPlugin {
   constructor(config) {
     // Replace 'plugin' with your plugin's name;
-    this.config = config && config.plugins && config.plugins.plugin;
+    this.config = config && config.plugins && config.plugins.ftpcopy;
   }
 
   // file: File => Promise[Boolean]
