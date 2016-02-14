@@ -21,7 +21,10 @@ class BrunchPlugin {
   // file: File => Promise[File]
   // Transforms a file data to different data. Could change the source map etc.
   // Examples: JSX, CoffeeScript, Handlebars, SASS.
-  // compile(file) { return Promise.resolve(file); }
+  compile(file) {
+      console.log('Compile', file.path);
+      return Promise.resolve(file);
+  }
 
   // file: File => Promise[Array: Path]
   // Allows Brunch to calculate dependants of the file and re-compile them too.
