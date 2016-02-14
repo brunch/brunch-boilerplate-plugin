@@ -60,7 +60,7 @@ BrunchPlugin.prototype.brunchPlugin = true;
 
 // Required for compilers, linters & optimizers.
 // 'javascript', 'stylesheet' or 'template'
-// BrunchPlugin.prototype.type = 'javascript';
+BrunchPlugin.prototype.type = 'template';
 
 // Required for compilers & linters.
 // It would filter-out the list of files to operate on.
