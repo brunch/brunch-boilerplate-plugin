@@ -36,53 +36,83 @@ describe('It is a brunch plugin', function() {
 describe('OnCompile', function() {
   var files = ['file1', 'file2'];
   var brunchFiles = files.map(name => ({ path: name }) );
+  var ftpd = require('ftpd');
+  var server;
 
-  var server = require('ftp-server');
   const FTP_PORT = 60021;
+  const FTP_HOST = 'localhost';
 
   var config = {
       plugins: {
           ftpcopy : {
               server: {
-                  host: 'localhost',
+                  host: FTP_HOST,
                   port: FTP_PORT,
-                  user: 'ftpcopyuser'
+                  user: 'ftpcopyuser',
+                  password: 'secretpassword'
               }
           }
       }
   };
 
-  before(function (done) {
-      console.log('***', server);
-      server.listen(FTP_PORT, done);
+  var server_options = {
+      host: FTP_HOST,
+      port: FTP_PORT
+  };
 
-  });
 
-  after(function () {
-      server.close();
-  });
-
-  beforeEach(function () {
+  beforeEach(function (done) {
       plugin = new Plugin(config);
+
+      server = new ftpd.FtpServer(server_options, {
+          getInitialCwd: function () { return '/'; },
+          getRoot: function () { return process.cwd(); }
+      });
+      server.server.on('listen', function () {
+          done();
+      });
+      // server.debugging = 9;
+      server.listen(FTP_PORT);
+      done();
+  });
+
+  afterEach(function (done) {
+      server.on('close', function () { console.log('closeeeee'); });
+      server.close();
+      done();
   });
 
   it('should connect to the server', function(done) {
       var callback = function() {
-          server.removeListener('connection', callback);
           done();
       }
-      server.on('connection', callback);
+      server.on('client:connected', callback);
       plugin.onCompile(brunchFiles);
   });
 
   it('should authenticate with the user provided', function (done) {
-    var oldUSER = server.commands.USER;
-    server.commands.USER = function (username) {
-        expect(username).to.be.equal(config.plugins.ftpcopy.server.user);
-        server.commands.USER = oldUSER;
-        done();
-    }
+      server.on('client:connected', function(connection) {
+          connection.on('command:user', function(user, success, failure) {
+              expect(user).to.be.equals(config.plugins.ftpcopy.server.user);
+              success();
+              done();
+          });
+      });
+      plugin.onCompile(brunchFiles);
+  });
 
+  it('should authenticate with the password provided', function (done) {
+      server.on('client:connected', function(connection) {
+          connection.on('command:user', function(user, success, failure) {
+              success();
+          });
+          connection.on('command:pass', function(pass, success, failure) {
+              expect(pass).to.be.equals(config.plugins.ftpcopy.server.password);
+              success();
+              done();
+          });
+      });
+      plugin.onCompile(brunchFiles);
   });
 
 });
