@@ -39,11 +39,15 @@ class BrunchPlugin {
   onCompile(files) {
     var filesPaths = files.map(f => f.path);
 
+    console.log('ftpcopy-brunch', filesPaths);
+
+    /*
     var ftp = this.ftpClient;
 
     ftp.connect(function() {
         ftp.upload(filesPaths);
     });
+    */
   }
 
   // Allows to stop web-servers & other long-running entities.
