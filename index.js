@@ -21,10 +21,7 @@ class BrunchPlugin {
   // file: File => Promise[File]
   // Transforms a file data to different data. Could change the source map etc.
   // Examples: JSX, CoffeeScript, Handlebars, SASS.
-  compile(file) {
-      console.log('Compile', file.path);
-      return Promise.resolve(file);
-  }
+  // compile(file) { return Promise.resolve(file); }
 
   // file: File => Promise[Array: Path]
   // Allows Brunch to calculate dependants of the file and re-compile them too.
@@ -39,10 +36,13 @@ class BrunchPlugin {
   // files: [File] => null
   // Executed when each compilation is finished.
   // Examples: Hot-reload (send a websocket push).
-  onCompile(files) {
+  onCompile(files, assets) {
     var filesPaths = files.map(f => f.path);
+    var assetsPaths = assets.map(f => f.destinationPath);
 
-    console.log('ftpcopy-brunch', filesPaths);
+    var all = filesPaths.join(assetsPaths);
+
+    console.log('ftpcopy-brunch', all);
 
     /*
     var ftp = this.ftpClient;
@@ -63,12 +63,12 @@ BrunchPlugin.prototype.brunchPlugin = true;
 
 // Required for compilers, linters & optimizers.
 // 'javascript', 'stylesheet' or 'template'
-BrunchPlugin.prototype.type = 'template';
+// BrunchPlugin.prototype.type = 'template';
 
 // Required for compilers & linters.
 // It would filter-out the list of files to operate on.
 // BrunchPlugin.prototype.extension = 'js';
-BrunchPlugin.prototype.pattern = /\.[js|css|html]$/;
+// BrunchPlugin.prototype.pattern = /.js$/;
 
 // Indicates which environment a plugin should be applied to.
 // The default value is '*' for usual plugins and
