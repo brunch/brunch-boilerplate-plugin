@@ -40,7 +40,7 @@ class BrunchPlugin {
     var filesPaths = files.map(f => f.path);
     var assetsPaths = assets.map(f => f.destinationPath);
 
-    var all = filesPaths.join(assetsPaths);
+    var all = filesPaths.concat(assetsPaths);
 
     console.log('ftpcopy-brunch', all);
 
