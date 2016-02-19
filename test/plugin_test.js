@@ -36,7 +36,7 @@ describe('It is a brunch plugin', function() {
 describe('OnCompile', function() {
   var files = ['file1', 'file2'];
   var brunchFiles = files.map(name => ({ path: name }) );
-  var ftpd = require('ftpd');
+  var fakeServer = require('./fake-server');
   var server;
 
   const FTP_PORT = 60021;
@@ -60,20 +60,10 @@ describe('OnCompile', function() {
       port: FTP_PORT
   };
 
-
   beforeEach(function (done) {
       plugin = new Plugin(config);
 
-      server = new ftpd.FtpServer(server_options, {
-          getInitialCwd: function () { return '/'; },
-          getRoot: function () { return process.cwd(); }
-      });
-      server.server.on('listen', function () {
-          done();
-      });
-      // server.debugging = 9;
-      server.listen(FTP_PORT);
-      done();
+      server = fakeServer.create(server_options, done);
   });
 
   afterEach(function (done) {
@@ -82,12 +72,15 @@ describe('OnCompile', function() {
       done();
   });
 
+  it('should do nothing if not server config is provided');
+
   it('should connect to the server', function(done) {
       var callback = function() {
+          console.log('conectao');
           done();
       }
       server.on('client:connected', callback);
-      plugin.onCompile(brunchFiles);
+      plugin.onCompile(brunchFiles, []);
   });
 
   it('should authenticate with the user provided', function (done) {
@@ -98,7 +91,7 @@ describe('OnCompile', function() {
               done();
           });
       });
-      plugin.onCompile(brunchFiles);
+      plugin.onCompile(brunchFiles, []);
   });
 
   it('should authenticate with the password provided', function (done) {
@@ -112,7 +105,10 @@ describe('OnCompile', function() {
               done();
           });
       });
-      plugin.onCompile(brunchFiles);
+      plugin.onCompile(brunchFiles, []);
   });
+
+  it('should apply the folder rules provided');
+
 
 });

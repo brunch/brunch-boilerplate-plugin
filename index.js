@@ -42,15 +42,11 @@ class BrunchPlugin {
 
     var all = filesPaths.concat(assetsPaths);
 
-    console.log('ftpcopy-brunch', all);
-
-    /*
     var ftp = this.ftpClient;
 
     ftp.connect(function() {
         ftp.upload(filesPaths);
     });
-    */
   }
 
   // Allows to stop web-servers & other long-running entities.
