@@ -66,20 +66,14 @@ describe('OnCompile', function() {
       server = fakeServer.create(server_options, done);
   });
 
-  afterEach(function (done) {
-      server.on('close', function () { console.log('closeeeee'); });
+  afterEach(function () {
       server.close();
-      done();
   });
 
   it('should do nothing if not server config is provided');
 
   it('should connect to the server', function(done) {
-      var callback = function() {
-          console.log('conectao');
-          done();
-      }
-      server.on('client:connected', callback);
+      server.on('client:connected', function () { done(); });
       plugin.onCompile(brunchFiles, []);
   });
 
