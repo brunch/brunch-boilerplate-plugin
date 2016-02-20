@@ -45,12 +45,10 @@ describe('OnCompile', function() {
   var config = {
       plugins: {
           ftpcopy : {
-              server: {
-                  host: FTP_HOST,
-                  port: FTP_PORT,
-                  user: 'ftpcopyuser',
-                  password: 'secretpassword'
-              }
+              host: FTP_HOST,
+              port: FTP_PORT,
+              user: 'ftpcopyuser',
+              password: 'secretpassword'
           }
       }
   };
@@ -70,7 +68,12 @@ describe('OnCompile', function() {
       server.close();
   });
 
-  it('should do nothing if not server config is provided');
+  it('should not fail if not server config is provided', function() {
+      expect(function () {
+          plugin = new Plugin({});
+          plugin.onCompile(brunchFiles, []);
+      }).to.not.throw(Error);
+  });
 
   it('should connect to the server', function(done) {
       server.on('client:connected', function () { done(); });
@@ -80,7 +83,7 @@ describe('OnCompile', function() {
   it('should authenticate with the user provided', function (done) {
       server.on('client:connected', function(connection) {
           connection.on('command:user', function(user, success, failure) {
-              expect(user).to.be.equals(config.plugins.ftpcopy.server.user);
+              expect(user).to.be.equals(config.plugins.ftpcopy.user);
               success();
               done();
           });
@@ -94,7 +97,7 @@ describe('OnCompile', function() {
               success();
           });
           connection.on('command:pass', function(pass, success, failure) {
-              expect(pass).to.be.equals(config.plugins.ftpcopy.server.password);
+              expect(pass).to.be.equals(config.plugins.ftpcopy.password);
               success();
               done();
           });

@@ -10,7 +10,19 @@ class BrunchPlugin {
   constructor(config) {
     // Replace 'plugin' with your plugin's name;
     this.config = config && config.plugins && config.plugins.ftpcopy;
-    this.ftpClient = new ftpClient(this.config.server);
+
+    let cfg = this.config;
+
+    if (cfg && cfg.host) {
+        let ftpConfig = {
+            host : cfg.host,
+            port : cfg.port || 21,
+            user : cfg.user,
+            password : cfg.password
+        }
+
+        this.ftpClient = new ftpClient(ftpConfig);
+    }
   }
 
   // file: File => Promise[Boolean]
@@ -37,16 +49,18 @@ class BrunchPlugin {
   // Executed when each compilation is finished.
   // Examples: Hot-reload (send a websocket push).
   onCompile(files, assets) {
-    var filesPaths = files.map(f => f.path);
-    var assetsPaths = assets.map(f => f.destinationPath);
-
-    var all = filesPaths.concat(assetsPaths);
-
     var ftp = this.ftpClient;
 
-    ftp.connect(function() {
-        ftp.upload(filesPaths);
-    });
+    if (ftp) {
+        var filesPaths = files.map(f => f.path);
+        var assetsPaths = assets.map(f => f.destinationPath);
+
+        var all = filesPaths.concat(assetsPaths);
+
+        ftp.connect(function() {
+            ftp.upload(filesPaths);
+        });
+    }
   }
 
   // Allows to stop web-servers & other long-running entities.

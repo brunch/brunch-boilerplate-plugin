@@ -1,10 +1,8 @@
 "use strict";
 
 var ftpd = require('ftpd');
+var fakeFs = require('./fake-fs');
 
-class FakeFs {
-
-}
 
 function defaultConnection() {
   this.on('client:connected', function(connection) {
@@ -14,7 +12,7 @@ function defaultConnection() {
           success();
       });
       connection.on('command:pass', function(pass, success, failure) {
-          success(username);
+          success(username, fakeFs);
       });
   });
 }
@@ -22,7 +20,9 @@ function defaultConnection() {
 function createServer(options, callback) {
   var server = new ftpd.FtpServer(options, {
       getInitialCwd: function () { return '/'; },
-      getRoot: function () { return process.cwd(); }
+      getRoot: function () { return process.cwd(); },
+      useWriteFile: true,
+      useReadFile: true
   });
   // server.debugging = 9;
   server.listen(options.port, callback);
