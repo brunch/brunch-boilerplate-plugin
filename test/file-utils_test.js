@@ -35,4 +35,9 @@ describe('addFolders', function () {
         var files = ['abc.txt', 'demo/xyz.doc', 'one/two/file.txt'];
         expect(addFolders(files)).to.have.members(['demo', 'one', 'one/two', 'abc.txt', 'demo/xyz.doc', 'one/two/file.txt']);
     });
+
+    it('should include a folder just one time', function () {
+        var files = ['demo/abc.txt', 'demo/xyz.doc'];
+        expect(addFolders(files)).to.have.length(3);
+    });
 });

@@ -7,7 +7,7 @@ var fileUtils = require('./lib/file-utils');
 
 // Receives the files and assets brunch's data structures
 // and return a plain array of files
-function filesToUpload(files, assets) {
+function filesToUpload(files, assets, baseDir) {
     var filesPaths = files.map(f => f.path);
     var assetsPaths = assets.map(f => f.destinationPath);
 
@@ -17,7 +17,10 @@ function filesToUpload(files, assets) {
 
     var currentDir = process.cwd();
 
-    return all.map(f => path.join(currentDir, f));
+    all = all.map(f => path.join(currentDir, f));
+    all = all.filter(f => (f.indexOf(baseDir) === 0) && (baseDir !== f));
+
+    return all;
 }
 
 // Documentation for Brunch plugins:
@@ -81,7 +84,7 @@ class BrunchPlugin {
         var baseDir = this._baseDir();
 
         ftp.connect(function() {
-            ftp.upload(filesToUpload(files, assets), '/', {
+            ftp.upload(filesToUpload(files, assets, baseDir), '/', {
                 overwrite: 'all',
                 baseDir: baseDir
             }, function () {
