@@ -1,6 +1,6 @@
 'use strict';
 
-var files = ['file1.txt', 'file2.txt'];
+var files = ['test/data/client/file1.txt', 'test/data/client/file2.txt', 'test/data/client/more/file3.txt'];
 var brunchFiles = files.map(name => ({ path: name }) );
 var plugin;
 
@@ -115,13 +115,32 @@ describe('OnCompile', function() {
       server.defaultConnection();
 
       server.on('end', function () {
-        expect(server.filesReceived).to.have.members(files);
+        expect(server.filesReceived).to.have.length(files.length);
         done();
       });
       plugin.onCompile(brunchFiles, []);
   });
 
-  it('should use the base path provided');
+  it('should use the base path provided', function (done) {
+      server.defaultConnection();
+
+      server.on('end', function () {
+        expect(server.filesReceived).to.have.members(['file1.txt', 'file2.txt', 'more/file3.txt']);
+        done();
+      });
+      plugin.onCompile(brunchFiles, []);
+  });
+
+  it('should create directories', function (done) {
+      server.defaultConnection();
+
+      server.on('end', function () {
+        expect(server.dirsReceived).to.include('more');
+        done();
+      });
+      plugin.onCompile(brunchFiles, []);
+  });
+
   it('should apply the folder rules provided');
 
 

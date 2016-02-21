@@ -2,6 +2,23 @@
 
 var ftpClient = require('ftp-client');
 var path = require('path');
+var fileUtils = require('./lib/file-utils');
+
+
+// Receives the files and assets brunch's data structures
+// and return a plain array of files
+function filesToUpload(files, assets) {
+    var filesPaths = files.map(f => f.path);
+    var assetsPaths = assets.map(f => f.destinationPath);
+
+    var all = filesPaths.concat(assetsPaths);
+
+    all = fileUtils.addFolders(all);
+
+    var currentDir = process.cwd();
+
+    return all.map(f => path.join(currentDir, f));
+}
 
 // Documentation for Brunch plugins:
 // https://github.com/brunch/brunch/blob/master/docs/plugins.md
@@ -29,8 +46,9 @@ class BrunchPlugin {
   }
 
   _baseDir() {
-      return path.join(process.cwd(), (this.config.basePath || '/'));
+      return path.join(process.cwd(), (this.config.basePath || ''));
   }
+
 
   // file: File => Promise[Boolean]
   // Called before every compilation. Stops it when the error is returned.
@@ -56,21 +74,14 @@ class BrunchPlugin {
   // Executed when each compilation is finished.
   // Examples: Hot-reload (send a websocket push).
   onCompile(files, assets) {
-    var ftp = this.ftpClient;
+    var self = this;
+    var ftp = self.ftpClient;
 
     if (ftp) {
-        var filesPaths = files.map(f => f.path);
-        var assetsPaths = assets.map(f => f.destinationPath);
-
-        var all = filesPaths.concat(assetsPaths);
         var baseDir = this._baseDir();
-        // console.log('client basedir', baseDir);
-
-        filesPaths = filesPaths.map(f => path.join(baseDir, f));
-        // console.log('files', filesPaths);
 
         ftp.connect(function() {
-            ftp.upload(filesPaths, '/', {
+            ftp.upload(filesToUpload(files, assets), '/', {
                 overwrite: 'all',
                 baseDir: baseDir
             }, function () {

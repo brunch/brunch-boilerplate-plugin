@@ -3,6 +3,7 @@
 var ftpd = require('ftpd');
 var fakeFs = require('./fake-fs');
 var path = require('path');
+var rmdir = require('./rmdir');
 
 
 function defaultConnection(callback) {
@@ -28,6 +29,12 @@ function defaultConnection(callback) {
           connection._old_emit.apply(this, arguments);
       }
       */
+      connection._real_MKD = connection._command_MKD;
+      connection._command_MKD = function (pathRequest) {
+        self.dirsReceived.push(pathRequest);
+        return this._real_MKD(pathRequest);
+      }
+
       if (callback) {
           callback(connection);
       }
@@ -42,6 +49,8 @@ function closeAll() {
 
 function createServer(options, callback) {
   var basePath = path.join(process.cwd(), 'test', 'data', 'server');
+
+  rmdir(basePath);
 
   var server = new ftpd.FtpServer(options.host, {
       getInitialCwd: function () { return '/'; },
@@ -68,6 +77,7 @@ function createServer(options, callback) {
   */
 
   server.filesReceived = [];
+  server.dirsReceived = [];
   server.openConnections = [];
   server.on('client:connected', function(conn) {
       this.openConnections.push(conn.socket);
