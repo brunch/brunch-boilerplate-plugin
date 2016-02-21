@@ -1,5 +1,10 @@
+'use strict';
+
+var files = ['file1.txt', 'file2.txt'];
+var brunchFiles = files.map(name => ({ path: name }) );
+var plugin;
+
 describe('It is a brunch plugin', function() {
-  var plugin;
 
   var config = {
       plugins: {
@@ -31,16 +36,21 @@ describe('It is a brunch plugin', function() {
     expect(plugin.config).to.be.equal(config.plugins.ftpcopy);
   });
 
+  it('should not fail if not server config is provided', function() {
+      expect(function () {
+          plugin = new Plugin({});
+          plugin.onCompile(brunchFiles, []);
+      }).to.not.throw(Error);
+  });
+
 });
 
 describe('OnCompile', function() {
-  var files = ['file1', 'file2'];
-  var brunchFiles = files.map(name => ({ path: name }) );
   var fakeServer = require('./fake-server');
   var server;
 
   const FTP_PORT = 60021;
-  const FTP_HOST = 'localhost';
+  const FTP_HOST = '127.0.0.1';
 
   var config = {
       plugins: {
@@ -48,7 +58,8 @@ describe('OnCompile', function() {
               host: FTP_HOST,
               port: FTP_PORT,
               user: 'ftpcopyuser',
-              password: 'secretpassword'
+              password: 'secretpassword',
+              basePath: 'test/data/client'
           }
       }
   };
@@ -64,16 +75,11 @@ describe('OnCompile', function() {
       server = fakeServer.create(server_options, done);
   });
 
-  afterEach(function () {
-      server.close();
+  afterEach(function (done) {
+      server.on('close', done);
+      server.closeAll();
   });
 
-  it('should not fail if not server config is provided', function() {
-      expect(function () {
-          plugin = new Plugin({});
-          plugin.onCompile(brunchFiles, []);
-      }).to.not.throw(Error);
-  });
 
   it('should connect to the server', function(done) {
       server.on('client:connected', function () { done(); });
@@ -105,6 +111,17 @@ describe('OnCompile', function() {
       plugin.onCompile(brunchFiles, []);
   });
 
+  it('should upload files changed', function (done) {
+      server.defaultConnection();
+
+      server.on('end', function () {
+        expect(server.filesReceived).to.have.members(files);
+        done();
+      });
+      plugin.onCompile(brunchFiles, []);
+  });
+
+  it('should use the base path provided');
   it('should apply the folder rules provided');
 
 

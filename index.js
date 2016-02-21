@@ -1,6 +1,7 @@
 'use strict';
 
 var ftpClient = require('ftp-client');
+var path = require('path');
 
 // Documentation for Brunch plugins:
 // https://github.com/brunch/brunch/blob/master/docs/plugins.md
@@ -19,10 +20,16 @@ class BrunchPlugin {
             port : cfg.port || 21,
             user : cfg.user,
             password : cfg.password
-        }
+        };
+        // let options = { logging: 'debug' };
+        let options = { logging: 'none' };
 
-        this.ftpClient = new ftpClient(ftpConfig);
+        this.ftpClient = new ftpClient(ftpConfig, options);
     }
+  }
+
+  _baseDir() {
+      return path.join(process.cwd(), (this.config.basePath || '/'));
   }
 
   // file: File => Promise[Boolean]
@@ -56,9 +63,19 @@ class BrunchPlugin {
         var assetsPaths = assets.map(f => f.destinationPath);
 
         var all = filesPaths.concat(assetsPaths);
+        var baseDir = this._baseDir();
+        // console.log('client basedir', baseDir);
+
+        filesPaths = filesPaths.map(f => path.join(baseDir, f));
+        // console.log('files', filesPaths);
 
         ftp.connect(function() {
-            ftp.upload(filesPaths);
+            ftp.upload(filesPaths, '/', {
+                overwrite: 'all',
+                baseDir: baseDir
+            }, function () {
+                // console.log('upload finished', arguments);
+            });
         });
     }
   }
