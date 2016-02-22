@@ -1,21 +1,24 @@
-## {{NAME}}-brunch
-Adds {{DESCRIPTION}} support to
+## ftpcopy-brunch
+Adds ftp transfers support to
 [brunch](http://brunch.io).
 
 ## Usage
-Install the plugin via npm with `npm install --save {{NAME}}-brunch`.
+
+**This plugin is in development and it is not ready to use!**
+
+Install the plugin via npm with `npm install --save ftpcopy-brunch`.
 
 Or, do manual install:
 
-* Add `"{{NAME}}-brunch": "~x.y.z"` to `package.json` of your brunch app.
+* Add `"ftpcopy-brunch": "~x.y.z"` to `package.json` of your brunch app.
 * If you want to use git version of plugin, use the GitHub URI
-`"{{NAME}}-brunch": "brunch/{{NAME}}-brunch"`.
+`"ftpcopy-brunch": "brunch/ftpcopy-brunch"`.
 
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Paul Miller (http://paulmillr.com)
+Copyright (c) 2016 Gastón Fernández
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
