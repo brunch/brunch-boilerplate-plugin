@@ -4,6 +4,10 @@ var files = ['test/data/client/file1.txt', 'test/data/client/file2.txt', 'test/d
 var brunchFiles = files.map(name => ({ path: name }) );
 var plugin;
 
+function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 describe('It is a brunch plugin', function() {
 
   var config = {
@@ -128,6 +132,22 @@ describe('OnCompile', function() {
         expect(server.filesReceived).to.have.members(['file1.txt', 'file2.txt', 'more/file3.txt']);
         done();
       });
+      plugin.onCompile(brunchFiles, []);
+  });
+
+  it('should use the remote base path if it is provided', function (done) {
+      server.defaultConnection();
+
+      server.on('end', function () {
+        expect(server.filesReceived).to.have.members(['uploads/file1.txt', 'uploads/file2.txt', 'uploads/more/file3.txt']);
+        done();
+      });
+
+      var altConfig = clone(config);
+      altConfig.plugins.ftpcopy.remoteBasePath = 'uploads';
+
+      plugin = new Plugin(altConfig);
+
       plugin.onCompile(brunchFiles, []);
   });
 

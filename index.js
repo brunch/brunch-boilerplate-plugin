@@ -82,14 +82,17 @@ class BrunchPlugin {
 
     if (ftp) {
         var baseDir = this._baseDir();
+        var remoteBaseDir = this.config.remoteBasePath || '/';
 
         ftp.connect(function() {
-            ftp.upload(filesToUpload(files, assets, baseDir), '/', {
-                overwrite: 'all',
-                baseDir: baseDir
-            }, function () {
-                // console.log('upload finished', arguments);
-            });
+            ftp.upload(
+                filesToUpload(files, assets, baseDir),
+                remoteBaseDir,
+                { overwrite: 'all', baseDir: baseDir },
+                function () {
+                    // console.log('upload finished', arguments);
+                }
+            );
         });
     }
   }
