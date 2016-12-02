@@ -3,7 +3,7 @@ Adds {{DESCRIPTION}} support to
 [brunch](http://brunch.io).
 
 ## Usage
-Install the plugin via npm with `npm install --save {{NAME}}-brunch`.
+Install the plugin via npm with `npm install --save-dev {{NAME}}-brunch`.
 
 Or, do manual install:
 
