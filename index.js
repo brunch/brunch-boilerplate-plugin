@@ -1,13 +1,13 @@
 'use strict';
 
 // Documentation for Brunch plugins:
-// https://github.com/brunch/brunch/blob/master/docs/plugins.md
+// http://brunch.io/docs/plugins
 
 // Remove everything your plugin doesn't need.
 class BrunchPlugin {
   constructor(config) {
     // Replace 'plugin' with your plugin's name;
-    this.config = config && config.plugins && config.plugins.plugin;
+    this.config = config.plugins.plugin;
   }
 
   // file: File => Promise[Boolean]
