@@ -7,7 +7,9 @@ describe('Plugin', () => {
   let plugin;
 
   beforeEach(() => {
-    plugin = new Plugin({});
+    plugin = new Plugin({
+      plugins: {}
+    });
   });
 
   it('should be an object', () => {
