@@ -7,7 +7,7 @@
 class BrunchPlugin {
   constructor(config) {
     // Replace 'plugin' with your plugin's name;
-    this.config = config.plugins.plugin;
+    this.config = config.plugins.plugin || {};
   }
 
   // Optional
