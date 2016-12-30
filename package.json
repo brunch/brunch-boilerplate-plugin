@@ -19,5 +19,8 @@
     "eslint": "^3.12.2",
     "mocha": "~2.3.4",
     "eslint-config-brunch": "git+https://github.com/brunch/eslint-config-brunch.git"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-brunch"
   }
 }
