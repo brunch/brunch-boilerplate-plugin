@@ -15,10 +15,10 @@
   "dependencies": {
   },
   "devDependencies": {
-    "chai": "~3.4.1",
+    "chai": "^3",
     "eslint": "^3.12.2",
-    "mocha": "~2.3.4",
-    "eslint-config-brunch": "git+https://github.com/brunch/eslint-config-brunch.git"
+    "mocha": "^3",
+    "eslint-config-brunch": "brunch/eslint-config-brunch"
   },
   "eslintConfig": {
     "extends": "brunch"
