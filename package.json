@@ -21,6 +21,6 @@
     "eslint-config-brunch": "git+https://github.com/brunch/eslint-config-brunch.git"
   },
   "eslintConfig": {
-    "extends": "eslint-config-brunch"
+    "extends": "brunch"
   }
 }
