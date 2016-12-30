@@ -17,6 +17,7 @@
   "devDependencies": {
     "chai": "~3.4.1",
     "eslint": "^1.10.3",
-    "mocha": "~2.3.4"
+    "mocha": "~2.3.4",
+    "eslint-config-brunch": "git+https://github.com/brunch/eslint-config-brunch.git"
   }
 }
