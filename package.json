@@ -2,7 +2,7 @@
   "name": "name-brunch",
   "version": "1.0.0",
   "description": "Adds {{DESCRIPTION}} support to brunch.",
-  "author": "Paul Miller (http://paulmillr.com/)",
+  "author": "Paul Miller (https://paulmillr.com/)",
   "homepage": "https://github.com/brunch/{{NAME}}-brunch",
   "license": "MIT",
   "repository": {
@@ -15,10 +15,10 @@
   "dependencies": {
   },
   "devDependencies": {
-    "chai": "^3",
-    "eslint": "^3.12.2",
-    "mocha": "^3",
-    "eslint-config-brunch": "brunch/eslint-config-brunch"
+    "chai": "^4.2",
+    "eslint": "^6.7",
+    "mocha": "^6.2",
+    "eslint-config-brunch": "^1.2"
   },
   "eslintConfig": {
     "extends": "brunch"
